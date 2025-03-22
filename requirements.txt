@@ -1,0 +1,9 @@
+numpy
+pandas
+scikit-learn
+matplotlib
+seaborn
+jupyterlab
+plotly
+umap-learn
+hdbscan

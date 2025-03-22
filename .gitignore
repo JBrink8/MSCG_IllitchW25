@@ -1,0 +1,35 @@
+# Ignore Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Ignore virtual environments
+venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore data files
+*.tsv
+*.json
+*.xlsx
+*.parquet
+*.feather
+*.h5
+
+# Ignore logs and outputs
+logs/
+*.log
+*.out
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore model files and large binaries
+*.h5
+*.hdf5
+*.pkl
+*.joblib
+*.onnx
+*.pb
