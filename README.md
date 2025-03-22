@@ -3,8 +3,8 @@
 ## 1. Clone the Repository
 If you haven't already cloned the repository, run:
 ```sh
-git clone <repo_url>
-cd <repo_name>
+git clone git@github.com:JBrink8/MSCG_IllitchW25.git
+cd MSCG_IllitchW25
 ```
 
 ## 2. Set Up a Virtual Environment
