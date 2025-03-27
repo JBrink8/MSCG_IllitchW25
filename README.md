@@ -7,7 +7,11 @@ git clone git@github.com:JBrink8/MSCG_IllitchW25.git
 cd MSCG_IllitchW25
 ```
 
-## 2. Set Up a Virtual Environment
+## 2. Set up Data
+Download the Illitch csv files via MSCG Shared Drive. Create a directory titled 'data'
+at the top of the MSCG_IllitchW25 directory. Move csv files into the data directory.
+
+## 3. Set Up a Virtual Environment
 
 ### 🔹 Create a Virtual Environment
 ```sh
@@ -24,19 +28,19 @@ python3 -m venv venv
   source venv/bin/activate
   ```
 
-## 3. Install Dependencies
+## 4. Install Dependencies
 Once the virtual environment is activated, install the required dependencies:
 ```sh
 pip install -r requirements.txt
 ```
 
-## 4. Launch Jupyter Notebook
+## 5. Launch Jupyter Notebook
 To start JupyterLab and begin working on the project:
 ```sh
 jupyter lab
 ```
 
-## 5. Deactivate the Virtual Environment
+## 6. Deactivate the Virtual Environment
 When finished, deactivate the virtual environment:
 ```sh
 deactivate
