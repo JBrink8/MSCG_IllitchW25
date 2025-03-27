@@ -2,47 +2,40 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
+from sklearn.impute import KNNImputer
 
 '''Function to convert a column of a dataframe to binary values'''
-def binConvert(pd, colName, unknownCol='<Unknown>'):
-    values = pd[colName].unique()
-    # assert a value matches unknownCol
+def binConvert(df, colName, unknownCol='<Unknown>'):
+    # Convert null values to unknownCol
+    df[colName].fillna(unknownCol, inplace=True)
+    # Get unique values in the column
+    values = df[colName].unique()
+    # Ensure unknownCol is in the unique values
     assert unknownCol in values
-    # convert null values to unknownCol
-    pd[colName].fillna(unknownCol, inplace=True)
-    # create new columns for each value - append colName_ to value
-    # remove any spaces, commas, or periods from the value
+    # Sanitize column names and create new binary columns
     for value in values:
-            pd[colName + '_' + value] = pd[colName].apply(lambda x: 1 if x == value else 0)
-    # modify values to include the new columns
-    values = [colName + '_' + value for value in values]
-    #print (values)
-    # assert the sum of each new column is equal to the number of rows in the dataframe
-    assert pd[values].sum().sum() == pd.shape[0]
-    # drop the original column
-    pd.drop(colName, axis=1, inplace=True)
-    return pd
+        sanitized_value = ''.join(e for e in value if e.isalnum() or e == '_')
+        new_col_name = f"{colName}_{sanitized_value}"
+        df[new_col_name] = df[colName].apply(lambda x: 1 if x == value else 0)
+    # Drop the original column
+    df.drop(colName, axis=1, inplace=True)
+    return df
 
 '''Print all columns starting with colName_'''
-def getConvertedValues(pd, colName):
-    values = pd.columns[pd.columns.str.startswith(colName + '_')]
+def getConvertedValues(df, colName):
+    values = df.columns[df.columns.str.startswith(colName + '_')]
     return values
 
-'''Function to replace nan values in a column with the nearest neighbor values'''
-def nearestNeighborEstimate(pd, colName):
-    # get the columns that are not null
-    notNull = pd[pd[colName].notnull()]
-    # get the columns that are null
-    isNull = pd[pd[colName].isnull()]
-    # create a new dataframe to store the results
-    result = pd.DataFrame()
-    # iterate through the columns that are null
-    for index, row in isNull.iterrows():
-        # calculate the distance between the row and all other rows
-        distances = notNull.apply(lambda x: np.linalg.norm(x - row), axis=1)
-        # find the index of the nearest neighbor
-        nearest = distances.idxmin()
-        # get the value of the nearest neighbor
-        result = result.append(notNull.loc[nearest])
-    # return the result
-    return result
+'''
+Function to use KNNImputer to fill in missing values
+for a list of columns in a dataframe
+Note: this function is for use with numerical columns
+'''
+def nearestNeighborEstimate(df, colNames, neighbors=2):
+    knn_imputer = KNNImputer(n_neighbors=neighbors)
+    if isinstance(colNames, str):
+        colNames = [colNames]
+    df_subset = df[colNames]
+    df_imputed = pd.DataFrame(knn_imputer.fit_transform(df_subset), columns=colNames)
+    df.update(df_imputed)
+    return df
