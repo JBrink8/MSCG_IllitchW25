@@ -39,3 +39,22 @@ def nearestNeighborEstimate(df, colNames, neighbors=2):
     df_imputed = pd.DataFrame(knn_imputer.fit_transform(df_subset), columns=colNames)
     df.update(df_imputed)
     return df
+
+'''
+Function to convert datatime objects to a number of days integer value
+Note: this function is for use with datetime columns
+'''
+def convertDateToDays(df, colName):
+    # Convert the column to datetime
+    df[colName] = pd.to_datetime(df[colName], errors='coerce')
+    # Get the current date
+    current_date = pd.to_datetime('today')
+    # Calculate the number of days since the date in the column
+    df[f'{colName}_totalDays'] = (current_date - df[colName]).dt.days
+    # Drop the original column
+    df.drop(colName, axis=1, inplace=True)
+    return df
+
+def getDateConvertedValues(df, colName):
+    values = df.columns[df.columns.str.startswith(colName + '_totalDays')]
+    return values
